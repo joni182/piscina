@@ -2,8 +2,6 @@
 
 namespace app\models;
 
-use Yii;
-
 /**
  * This is the model class for table "reservas".
  *
@@ -47,6 +45,17 @@ class Reservas extends \yii\db\ActiveRecord
             'hora' => 'Hora',
             'usuario_id' => 'Usuario ID',
         ];
+    }
+
+    public static function getReservadas()
+    {
+        $reservas = static::find()->all();
+        $array_reservas = [];
+        foreach ($reservas as $value) {
+            $array_reservas[$value->usuario_id] = $value->dia . ' ' . $value->hora;
+        }
+
+        return $array_reservas;
     }
 
     /**

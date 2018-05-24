@@ -22,4 +22,5 @@ CREATE TABLE reservas
 );
 
 INSERT INTO usuarios(dni,password)
-VALUES ('31568412V', crypt('pepe', gen_salt('bf', 11)));
+VALUES ('31597394V', crypt('pepe', gen_salt('bf', 11)))
+     , ('49038938V', crypt('pepe', gen_salt('bf', 11)));

@@ -1,6 +1,8 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 use DateTime;
 use DateInterval;
@@ -26,22 +28,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'fri' => 'Viernes',
         ];
 
-        $horas = [
-            '10:00',
-            '11:00',
-            '12:00',
-            '13:00',
-            '14:00',
-            '15:00',
-            '16:00',
-            '17:00',
-            '18:00',
-            '19:00',
-        ];
         $diaSemana = date('N');
         $dateTime = new DateTime();
         $dateTime->sub(new DateInterval("P{$diaSemana}D"));
-
+        $dateTime->setTime(10,00);
     ?>
 
     <table>
@@ -51,14 +41,50 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php endforeach; ?>
         </tr>
 
-        <?php foreach ($horas as $key => $value): ?>
+        <?php for ($i = 0; $i < 10; $i++): ?>
             <tr>
-                <?php for ($i = 0; $i < 5; $i++): $dateTime->add(new DateInterval('P1D'))?>
-                    <td data-dia="<?= $dateTime->format('Y-m-d') ?>" style='padding:20px'><?= $value ?></td>
+                <?php for ($j = 0; $j < 5; $j++): $dateTime->add(new DateInterval('P1D'))?>
+                    <td data-dia="<?= ($fechaHora = $dateTime->format('Y-m-d H:i:s')) ?>" style='padding:20px'>
+                        <?= $hora = ($dateTime->format('H:i')) ?>
+                        <?php if (in_array($fechaHora, $reservas)): ?>
+                            <p>reservada</p>
+                        <?php if (array_search($dateTime->format('Y-m-d H:i:s') ,$reservas) == Yii::$app->user->id): ?>
+                            <p>TU RESERVA</p>
+                            <?= Html::beginForm('reservas/delete'); ?>
+
+                            <?= Html::activeHiddenInput($model, 'dia', ['value' => $dateTime->format('Y-m-d')]) ?>
+
+                            <?= Html::activeHiddenInput($model, 'hora', ['value' => $hora]) ?>
+
+                            <?= Html::activeHiddenInput($model, 'usuario_id', ['value' => Yii::$app->user->id]) ?>
+
+                            <div class="form-group">
+                                <?= Html::submitButton('Cancelar', ['class' => 'btn btn-danger']) ?>
+                            </div>
+
+                            <?= Html::endForm() ?>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <?= Html::beginForm(['reservas/create'], 'post'); ?>
+
+                        <?= Html::activeHiddenInput($model, 'dia', ['value' => $dateTime->format('Y-m-d')]) ?>
+
+                        <?= Html::activeHiddenInput($model, 'hora', ['value' => $hora]) ?>
+
+                        <?= Html::activeHiddenInput($model, 'usuario_id', ['value' => Yii::$app->user->id]) ?>
+
+                        <div class="form-group">
+                            <?= Html::submitButton('Reservar', ['class' => 'btn btn-success']) ?>
+                        </div>
+
+                        <?= Html::endForm() ?>
+                    <?php endif; ?>
+                    </td>
                 <?php endfor; ?>
             </tr>
+            <?php $dateTime->add(new DateInterval('PT1H')) ?>
             <?php $dateTime->sub(new DateInterval('P5D')) ?>
-        <?php endforeach; ?>
+        <?php endfor; ?>
     </table>
 
 

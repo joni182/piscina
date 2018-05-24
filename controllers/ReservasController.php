@@ -2,12 +2,11 @@
 
 namespace app\controllers;
 
-use Yii;
 use app\models\Reservas;
-use app\models\ReservasSearch;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * ReservasController implements the CRUD actions for Reservas model.
@@ -35,18 +34,18 @@ class ReservasController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ReservasSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $reservas = Reservas::getReservadas();
+        $model = new Reservas();
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'model' => $model,
+            'reservas' => $reservas,
         ]);
     }
 
     /**
      * Displays a single Reservas model.
-     * @param integer $id
+     * @param int $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -66,6 +65,9 @@ class ReservasController extends Controller
     {
         $model = new Reservas();
 
+        // var_dump(Yii::$app->request->post());
+        // die();
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -78,7 +80,7 @@ class ReservasController extends Controller
     /**
      * Updates an existing Reservas model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
+     * @param int $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -98,7 +100,7 @@ class ReservasController extends Controller
     /**
      * Deletes an existing Reservas model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
+     * @param int $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -112,7 +114,7 @@ class ReservasController extends Controller
     /**
      * Finds the Reservas model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
+     * @param int $id
      * @return Reservas the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
