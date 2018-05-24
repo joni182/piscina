@@ -2,7 +2,9 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+use yii\web\IdentityInterface;
+
+class User extends \yii\base\BaseObject implements IdentityInterface
 {
     public $id;
     public $username;
@@ -51,7 +53,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     }
 
     /**
-     * Finds user by username
+     * Finds user by username.
      *
      * @param string $username
      * @return static|null
@@ -92,7 +94,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     }
 
     /**
-     * Validates password
+     * Validates password.
      *
      * @param string $password password to validate
      * @return bool if password provided is valid for current user

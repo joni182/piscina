@@ -15,7 +15,8 @@ DROP TABLE IF EXISTS reservas CASCADE;
 
 CREATE TABLE reservas
 (
-      dia date NOT NULL
+    id bigserial PRIMARY KEY
+    , dia date NOT NULL
     , hora time NOT NULL
     , usuario_id bigint REFERENCES usuarios(id)
 );
