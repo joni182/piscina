@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Reservas;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -23,6 +24,15 @@ class ReservasController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
                 ],
             ],
         ];
@@ -68,8 +78,6 @@ class ReservasController extends Controller
 
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            var_dump($model);
-            die();
             return $this->redirect(['index']);
         }
 
@@ -105,9 +113,15 @@ class ReservasController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete()
     {
-        $this->findModel($id)->delete();
+        // var_dump($_POST['Reservas']['dia']);
+        // die();
+        $model = Reservas::find()->where(['dia' => $_POST['Reservas']['dia']])->andWhere(['hora' => $_POST['Reservas']['hora']])->one();
+
+        if ($model !== null) {
+            $model->delete();
+        }
 
         return $this->redirect(['index']);
     }

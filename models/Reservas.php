@@ -52,7 +52,13 @@ class Reservas extends \yii\db\ActiveRecord
         $reservas = static::find()->all();
         $array_reservas = [];
         foreach ($reservas as $value) {
-            $array_reservas[$value->usuario_id] = $value->dia . ' ' . $value->hora;
+            if ($value->usuario_id) {
+                $array_reservas[] = [
+                    'fecha' => $value->dia . ' ' . $value->hora,
+                    'usuario_id' => $value->usuario_id,
+                    'id' => $value->id,
+                ];
+            }
         }
 
         return $array_reservas;
